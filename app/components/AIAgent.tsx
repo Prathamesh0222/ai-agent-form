@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { BotIcon } from "../icons/BotIcon";
 import { SendIcon } from "../icons/SendIcon";
 import { UserIcon } from "../icons/UserIcon";
@@ -19,6 +19,15 @@ export const AIAgent = ({
   onSendMessage,
 }: AIAgentProps) => {
   const [inputMessage, setInputMessage] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSendMessage = () => {
     if (inputMessage.trim() && !isLoading) {
@@ -35,8 +44,8 @@ export const AIAgent = ({
   };
 
   return (
-    <div className="flex flex-col h-full justify-between w-full">
-      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+    <div className="flex flex-col h-[390px] w-full">
+      <div className="flex-1 overflow-y-auto p-4 space-y-5 scrollbar-thin">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -66,6 +75,7 @@ export const AIAgent = ({
             </div>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="flex items-center space-x-2 px-4 border-white/20">
